@@ -16,4 +16,10 @@ var generateLocationMessage = (from, lat, lng) => {
     }
 }
 
-module.exports = {generateMessage, generateLocationMessage};
+var generateChatRoomName = (room) => {
+    return {
+        room
+    }
+}
+
+module.exports = {generateMessage, generateLocationMessage, generateChatRoomName};

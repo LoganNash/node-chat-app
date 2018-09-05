@@ -17,12 +17,38 @@ function scollToBottom () {
 }
 
 socket.on('connect', function () {
+    var params = jQuery.deparam(window.location.search);
+    socket.emit('join', params, function (err) {
+        if (err) {
+            alert(err);
+            window.location.href = '/';
+        } else {
+            console.log('No error');
+        };
+    });
+    var template = jQuery('#chat-room-template').html();
+    console.log(params.room);
+    var html = Mustache.render(template, {
+        chatRoom: params.room
+    })
+    jQuery('div.chat-room-name').html(html);
     console.log('Connected to server');
 });
 
 socket.on('disconnect', function () {
     console.log('Disconnected from server');
 });
+
+socket.on('updateUserList', function (users) {
+    var ol = jQuery('<ol></ol>');
+
+    users.forEach(function (user) {
+        ol.append(jQuery('<li></li>').text(user));
+    })
+
+    jQuery('#users').html(ol);
+    console.log('Users List', users);
+})
 
 socket.on('newMessage', function (message) {
     var formattedTime = moment(message.createdAt).format('h:mm a');
